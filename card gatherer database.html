@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Card Gatherer<title>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+	<script>
+  // Initialize Firebase
+		var config = {
+			apiKey: "AIzaSyDDCiBYAMP9PA0CktKhE1WmZGrpC88JuTY",
+			authDomain: "card-gatherer-database.firebaseapp.com",
+			databaseURL: "https://card-gatherer-database.firebaseio.com",
+			projectId: "card-gatherer-database",
+			storageBucket: "",
+			messagingSenderId: "634631330653"
+			};
+			firebase.initializeApp(config);
+	</script>
+	<meta charset="UTF-8"/>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>Gatherer ID: </td>
+			<td><input type="text" name="id" id="user_id"/></td>
+		</tr>
+		<tr>
+			<td>Gatherer Name: </td>
+			<td><input type="text" name="user_name" id="user_name"/></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" value="Save" onclick="save_user():"\>
+				<input type="button" value="Update" onclick="update_user():"\>
+				<input type="button" value="Delete" onclick="delete_user():"\>
+			</td>
+		</tr>
+			
+	</table>
+	
+	<h3>Gatherer's List<h3>
+	
+	<table id="gul_users_list">
+		<tr>
+			<td>GathererID</td>
+			<td>GathererName</td>
+		</tr>
+	</table>
+	
+	<script>
+		var gulUsers = document.getElementById('gul_users_list');
+		var databaseRef = firebase.databaseRef().ref('users/');
+		
+		var user_name = document.getElementById('user_name');
+		var user_id = document.getElementById('user_id');
+		
+		function save_user(){
+			var uid = firebase.databaseRef().ref().child('users').push.key;
+			
+			var data = {
+				user_id: uid,
+				user_name: user_name
+			}
+			var updates = {};
+			updates['/users/' + uid] = data; 
+			firebase.database().ref().update(updates);
+			
+			alert('You are now a Gatherer!');
+			reload_page();
+		}
+		function update_user(){
+			var data = {
+				user_id: user_id,
+				user_name: user_name
+			}
+			var updates = {};
+			updates['/users/' + user_id] = data;
+			firebase.database().ref().update(updates);
+			
+			alert("Gatherer, you are updated!");
+			
+			reload_page();
+		}
+		function delete_user(){	
+			firebase.datebase().ref().child('/users/' + user_id).remove();
+			alert("You have left Gatherer!");
+			reload_page();
+		}
+		function reload_page(){
+			window.location.reload();
+			
+		
+		}
+	</script>
+</body>
+</html>
